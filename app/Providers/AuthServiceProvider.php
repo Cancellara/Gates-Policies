@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
 
         //Registrar un gate.
         Gate::define('update-post', function (User $user, Post $post) {
-            return true;
+            return $user->isAdmin() || $user->owns($post);
         });
     }
 }
