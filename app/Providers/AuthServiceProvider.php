@@ -25,9 +25,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        //Before, regla global. Se pueden ir concatenado condiciones qeu serán usadas en los gates
+        Gate::before(function (User $user) {
+            if ($user->isAdmin()) {
+                return true;
+            }
+        });
         //Registrar un gate.
         Gate::define('update-post', function (User $user, Post $post) {
-            return $user->isAdmin() || $user->owns($post);
+            return $user->owns($post);
+        });
+        Gate::define('delete-post', function (User $user, Post $post) {
+            return $user->owns($post) && !$post->isPublished();
         });
     }
 }
