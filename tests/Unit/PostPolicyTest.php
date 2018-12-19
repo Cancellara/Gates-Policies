@@ -1,10 +1,13 @@
 <?php
 namespace Tests\Unit;
 use Tests\TestCase;
-use App\{Post, User};
+use App\{
+    Policies\PostPolicy, Post, User
+};
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 class PostPolicyTest extends TestCase
 {
     use RefreshDatabase;
@@ -16,7 +19,7 @@ class PostPolicyTest extends TestCase
         $this->be($admin); // = actingAs($admin)
         $post = new Post;
         // Act
-        $result = Gate::allows('update-post', $post); //Comprueba si se puede acceder al post. Este gate tiene que estar registrado en authServiceProvider
+        $result = Gate::allows('post.update', $post); //Comprueba si se puede acceder al post. Este gate tiene que estar registrado en authServiceProvider
         // Assert
         $this->assertTrue($result);
     }
@@ -26,17 +29,11 @@ class PostPolicyTest extends TestCase
     {
         // Arrange
         $user = $this->createUser();
-        $this->be($user);
         $post = factory(Post::class)->create([
             'user_id' => $user->id,
         ]);
         // Act
-        $result = Gate::allows('update-post', $post);
-        /*
-         * $result = $admin->can('update-post', $post);
-	     *  $result = $admin->cannot('update-post', $post);
-	     *  $result = auth()->user()->can('update-post');
-         */
+        $result = Gate::forUser($user)->allows('post.update', $post);
         // Assert
         $this->assertTrue($result);
     }
@@ -47,7 +44,7 @@ class PostPolicyTest extends TestCase
         $user = $this->createUser();
         $post = factory(Post::class)->create();
         // Act
-        $result = Gate::forUser($user)->allows('update-post', $post);
+        $result = Gate::forUser($user)->allows('post.update', $post);
         // Assert
         $this->assertFalse($result);
     }
@@ -57,7 +54,7 @@ class PostPolicyTest extends TestCase
         // Arrange
         $post = factory(Post::class)->create();
         // Act
-        $result = Gate::allows('update-post', $post);
+        $result = Gate::allows('post.update', $post);
         // Assert
         $this->assertFalse($result);
     }
@@ -68,7 +65,7 @@ class PostPolicyTest extends TestCase
         $admin = $this->createAdmin();
         $post = factory(Post::class)->states('published')->create();
         $this->assertTrue(
-            Gate::forUser($admin)->allows('delete-post', $post)
+            Gate::forUser($admin)->allows('post.delete', $post)
         );
     }
     /** @test */
@@ -79,7 +76,7 @@ class PostPolicyTest extends TestCase
             'user_id' => $user->id,
         ]);
         $this->assertTrue(
-            Gate::forUser($user)->allows('delete-post', $post)
+            Gate::forUser($user)->allows('post.delete', $post)
         );
     }
     /** @test */
@@ -90,7 +87,7 @@ class PostPolicyTest extends TestCase
             'user_id' => $user->id,
         ]);
         $this->assertFalse(
-            Gate::forUser($user)->allows('delete-post', $post)
+            Gate::forUser($user)->allows('post.delete', $post)
         );
     }
 
