@@ -47,3 +47,9 @@ Pero no funcionaria para los admins
 			$q->where('user_id', auth()->id());
 		})
 		->paginate();
+        
+        --------------------------------------------------
+        
+        Agregar filtros a los policys. Permitir o prohibir todas las acciones dentro de un filtro método before().
+
+Es lo mismo que el before en el authSerivceProvider pero que solo aplicará a los métodos del plicy en cuestion.
