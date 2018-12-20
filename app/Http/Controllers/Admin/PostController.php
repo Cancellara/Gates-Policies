@@ -22,10 +22,10 @@ class PostController extends Controller
         return 'Post updated!';
     }
 
-    /*public function create()
+    public function create()
     {
         $this->authorize('create', Post::class);
-    }*/
+    }
 
     public function store(Request $request)
     {
@@ -35,8 +35,20 @@ class PostController extends Controller
         ]);
         return new Response('Post created', 201);
     }
-    /*public function edit(Post $post)
+    public function edit(Post $post)
     {
         $this->authorize('update', $post);
-    }*/
+
+        return 'Editar post';
+    }
+
+    public function index()
+    {
+        $posts = Post::query()
+            ->unless(auth()->user()->isAdmin(), function ($q) {
+                $q->where('user_id', auth()->id());
+            })
+            ->paginate();
+        return view('admin.posts.index', compact('posts'));
+    }
 }

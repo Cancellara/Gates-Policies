@@ -29,13 +29,13 @@ Route::get('/', function () {
  */
 
 //Route::put('admin/posts/{post}', 'Admin\PostController@update');//->middleware('can:update,post'); ////update es el método del policy y post el modelo que esta asociado.
-Route::middleware('auth')->namespace('Admin\\')->group(function () {
-    Route::post('admin/posts', 'PostController@store');
-    Route::put('admin/posts/{post}', 'PostController@update');
+Route::middleware('auth')->namespace('Admin\\')->prefix('admin/')->group(function () {
+    Route::get('posts', 'PostController@index');
+    Route::post('posts', 'PostController@store');
+    Route::get('posts/{post}/edit', 'PostController@edit')->name('posts.edit');
+    Route::put('posts/{post}', 'PostController@update');
 });
 
+Auth::routes();
 
-Route::name('login')->get('login', function () {
-    return 'Login';
-});
-
+Route::get('/home', 'HomeController@index')->name('home');
