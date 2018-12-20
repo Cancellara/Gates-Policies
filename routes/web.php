@@ -12,6 +12,7 @@
 */
 
 use App\Post;
+use App\Http\Controllers\Admin\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,12 +28,12 @@ Route::get('/', function () {
 }
  */
 
-Route::put('admin/posts/{post}', function (Post $post, Request $request) {
-    $post->update([
-        'title' => $request->title,
-    ]);
-    return 'Post updated!';
-})->middleware('can:update,post'); ////update es el método del policy y post el modelo que esta asociado.
+//Route::put('admin/posts/{post}', 'Admin\PostController@update');//->middleware('can:update,post'); ////update es el método del policy y post el modelo que esta asociado.
+Route::middleware('auth')->namespace('Admin\\')->group(function () {
+    Route::post('admin/posts', 'PostController@store');
+    Route::put('admin/posts/{post}', 'PostController@update');
+});
+
 
 Route::name('login')->get('login', function () {
     return 'Login';

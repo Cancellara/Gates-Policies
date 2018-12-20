@@ -70,8 +70,8 @@ class UpdatePostTest extends TestCase
          * Se ha probado a reescribir el étodo difiderente unauthenticated en App\Exeption\Handler pero siempre devuelve forbidden.
          */
         //dd($response);
-        //$response->assertRedirect('login');
-        $response->assertStatus(403);
+        $response->assertRedirect('login');
+        //$response->assertStatus(403);
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
             'title' => 'Updated post title',
