@@ -19,7 +19,7 @@ class PostPolicyTest extends TestCase
         $this->be($admin); // = actingAs($admin)
         $post = new Post;
         // Act
-        $result = Gate::allows('post.update', $post); //Comprueba si se puede acceder al post. Este gate tiene que estar registrado en authServiceProvider
+        $result = Gate::allows('update', $post); //Comprueba si se puede acceder al post. Este gate tiene que estar registrado en authServiceProvider
         // Assert
         $this->assertTrue($result);
     }
@@ -33,7 +33,7 @@ class PostPolicyTest extends TestCase
             'user_id' => $user->id,
         ]);
         // Act
-        $result = Gate::forUser($user)->allows('post.update', $post);
+        $result = Gate::forUser($user)->allows('update', $post);
         // Assert
         $this->assertTrue($result);
     }
@@ -44,7 +44,7 @@ class PostPolicyTest extends TestCase
         $user = $this->createUser();
         $post = factory(Post::class)->create();
         // Act
-        $result = Gate::forUser($user)->allows('post.update', $post);
+        $result = Gate::forUser($user)->allows('update', $post);
         // Assert
         $this->assertFalse($result);
     }
@@ -54,7 +54,7 @@ class PostPolicyTest extends TestCase
         // Arrange
         $post = factory(Post::class)->create();
         // Act
-        $result = Gate::allows('post.update', $post);
+        $result = Gate::allows('update', $post);
         // Assert
         $this->assertFalse($result);
     }
@@ -65,7 +65,7 @@ class PostPolicyTest extends TestCase
         $admin = $this->createAdmin();
         $post = factory(Post::class)->states('published')->create();
         $this->assertTrue(
-            Gate::forUser($admin)->allows('post.delete', $post)
+            Gate::forUser($admin)->allows('delete', $post)
         );
     }
     /** @test */
@@ -76,7 +76,7 @@ class PostPolicyTest extends TestCase
             'user_id' => $user->id,
         ]);
         $this->assertTrue(
-            Gate::forUser($user)->allows('post.delete', $post)
+            Gate::forUser($user)->allows('delete', $post)
         );
     }
     /** @test */
@@ -87,7 +87,7 @@ class PostPolicyTest extends TestCase
             'user_id' => $user->id,
         ]);
         $this->assertFalse(
-            Gate::forUser($user)->allows('post.delete', $post)
+            Gate::forUser($user)->allows('delete', $post)
         );
     }
 

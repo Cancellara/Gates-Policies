@@ -2,14 +2,12 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Post;
+use App\{User, Post};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PostPolicy
+class OldPostPolicy
 {
     use HandlesAuthorization;
-
     /**
      * Determine whether the user can view the post.
      *
@@ -21,7 +19,6 @@ class PostPolicy
     {
         //
     }
-
     /**
      * Determine whether the user can create posts.
      *
@@ -32,7 +29,6 @@ class PostPolicy
     {
         //
     }
-
     /**
      * Determine whether the user can update the post.
      *
@@ -44,7 +40,6 @@ class PostPolicy
     {
         return $user->owns($post);
     }
-
     /**
      * Determine whether the user can delete the post.
      *
@@ -55,29 +50,5 @@ class PostPolicy
     public function delete(User $user, Post $post)
     {
         return $user->owns($post) && !$post->isPublished();
-    }
-
-    /**
-     * Determine whether the user can restore the post.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Post  $post
-     * @return mixed
-     */
-    public function restore(User $user, Post $post)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the post.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Post  $post
-     * @return mixed
-     */
-    public function forceDelete(User $user, Post $post)
-    {
-        //
     }
 }
