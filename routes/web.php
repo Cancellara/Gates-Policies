@@ -11,6 +11,30 @@
 |
 */
 
+use App\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+/*
+ *
+ * if (Gate::denies('update', $post)) { // si el usuario conectado no tiene acceso para actualizar el post
+    abort(403); // vamos a abortar la petición con un error 403
+}
+ */
+
+Route::put('admin/posts/{post}', function (Post $post, Request $request) {
+    $post->update([
+        'title' => $request->title,
+    ]);
+    return 'Post updated!';
+})->middleware('can:update,post'); ////update es el método del policy y post el modelo que esta asociado.
+
+Route::name('login')->get('login', function () {
+    return 'Login';
+});
+
